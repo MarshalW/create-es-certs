@@ -1,0 +1,5 @@
+instances:
+{% for item in groups[es_group_name] %}
+  - name: "{{ hostvars[item]['inventory_hostname'] }}"
+{% endfor %}
+

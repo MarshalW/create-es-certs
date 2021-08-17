@@ -1,0 +1,21 @@
+---
+- name: Clear elasticserach certs directory
+  file:
+    path: "./certs"
+    state: absent
+- name: Create elasticserach certs directory
+  file:
+    path: "./certs"
+    state: directory
+- name: Copy create-certs.yml to es
+  template:
+    src: "{{ role_path }}/files/create-certs.yml.j2"
+    dest: "./certs/create-certs.yml"
+- name: Copy instances.yml to es
+  template:
+    src: "{{ role_path }}/files/instances.yml.j2"
+    dest: "./certs/instances.yml"
+- name: generate cert
+  shell: |
+    cd ./certs
+    docker-compose -f create-certs.yml run --rm create_certs

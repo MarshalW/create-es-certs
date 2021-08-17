@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  create_certs:
+    container_name: create_certs
+    image: elasticsearch:{{es_version}}
+    command: >
+      bash -c '
+        if [[ ! -f /certs/bundle.zip ]]; then
+          bin/elasticsearch-certutil cert --silent --pem --in config/certificates/instances.yml -out /certs/bundle.zip;
+          unzip /certs/bundle.zip -d /certs; 
+        fi;
+        chown -R 1000:0 /certs
+      '
+    user: "0"
+    working_dir: /usr/share/elasticsearch
+    volumes:
+      - ./instances.yml:/usr/share/elasticsearch/config/certificates/instances.yml
+      - ./:/certs
